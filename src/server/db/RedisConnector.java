@@ -51,11 +51,9 @@ public class RedisConnector {
      * set field values as map and set expire the session
      */
     public boolean setAll(String field, Map<String, String> m, int expire) {
-        boolean rez = false;
         String r = cli.hmset(field, m);
         long er = cli.expire(field, expire);
-        rez = (r.equals("OK") && er>0);
-        return rez;
+        return (r.equals("OK") && er>0);
     }
 
     /**
@@ -63,8 +61,8 @@ public class RedisConnector {
      */
     public boolean set(String field, String key, String value) {
         boolean rez = false;
-        Map m = getAll(field);
-        if (m!=null) {
+        Map<String, String> m = getAll(field);
+        if (m != null) {
             m.put(key, value);
             rez = setAll(field, m);
         }
@@ -76,8 +74,8 @@ public class RedisConnector {
      */
     public boolean set(String field, String key, String value, int expire) {
         boolean rez = false;
-        Map m = getAll(field);
-        if (m!=null) {
+        Map<String,String> m = getAll(field);
+        if (m != null) {
             m.put(key, value==null ? "" : value);
             rez = setAll(field, m, expire);
         }
@@ -102,7 +100,7 @@ public class RedisConnector {
      * get field values and prolongs session
      */
     public Map<String, String> getAll(String field, int expire) {
-        Map m = cli.hgetAll(field);
+        Map<String,String> m = cli.hgetAll(field);
         cli.hmset(field, m);
         cli.expire(field, expire);
         return m;
